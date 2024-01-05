@@ -9,6 +9,7 @@ import Blog from "./components/Blog";
 // import Footer from "./components/Footer";
 
 function App() {
+  //no error detected
   return (
     <>
       <Navbar />
