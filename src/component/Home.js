@@ -13,17 +13,23 @@ const Home = () => {
         id="ContactPage"
         display="flex"
         sx={{
-          height: 1000,
+          height: "100vh",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
         }}>
-        <Grid container justifyContent="center">
-          <HomeContainerOne />
+        <Grid
+          container
+          justifyContent="center"
+          sx={{
+            display: "flex",
+            marginTop: 10,
+          }}>
+          <HomeContainerOne sx={{ flex: 1 }} />
 
-          <HomeContainerTwo />
+          <HomeContainerTwo sx={{ flex: 1 }} />
 
-          <HomeContainerThree />
+          <HomeContainerThree sx={{ flex: 1 }} />
         </Grid>
       </Box>
     </>

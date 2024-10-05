@@ -16,22 +16,28 @@ const Navbar = () => {
           <Typography
             variant="h6"
             component="div"
-            sx={{ flexGrow: 1 }}></Typography>
+            sx={{ flexGrow: 1, color: "gray", fontSize: 14 }}>
+            Samuel Boakye Asante
+          </Typography>
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{ flexGrow: 1, color: "gray" }}></Typography>
           <Stack direction="row" spacing={8}>
             <Link to="/">
-              <Button color="success">Home</Button>
+              <Button sx={{ color: "gray" }}>Home</Button>
             </Link>
             <Link to="/about-me" color="inherit">
-              <Button color="success">About</Button>
+              <Button sx={{ color: "gray" }}>About</Button>
             </Link>
             <Link to="/experience">
-              <Button color="success">Experience</Button>
+              <Button sx={{ color: "gray" }}>Experience</Button>
+            </Link>
+            <Link to="/Blog">
+              <Button sx={{ color: "gray" }}>Blogs</Button>
             </Link>
             <Link to="/contact-me">
-              <Button color="success">Contact Us</Button>
-            </Link>
-            <Link to="/blog">
-              <Button color="success">Blog</Button>
+              <Button sx={{ color: "gray" }}>Contact Us</Button>
             </Link>
           </Stack>
         </Toolbar>

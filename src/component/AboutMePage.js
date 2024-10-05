@@ -1,17 +1,5 @@
 import React from "react";
-import {
-  Stack,
-  Typography,
-  Box,
-  Avatar,
-  // Paper,
-
-  // TextField,
-} from "@mui/material";
-// import LinkedInIcon from "@mui/icons-material/LinkedIn";
-// import GitHubIcon from "@mui/icons-material/GitHub";
-// import TwitterIcon from "@mui/icons-material/Twitter";
-// import SchoolIcon from "@mui/icons-material/School";
+import { Stack, Typography, Box, Card, CardMedia } from "@mui/material";
 
 const AboutMePage = () => {
   return (
@@ -22,17 +10,18 @@ const AboutMePage = () => {
           position={"relative"}
           justifyContent={"left"}
           alignItems={"center"}
-          sx={{ height: 1000 }}>
-          <Avatar
-            top={10}
-            marginTop={10}
-            variant="square"
-            sx={{ display: "block", width: 700, height: 900 }}
-            alt="About-Me"
-            src="https://source.unsplash.com/random?wallpapers"
-            position={"fixed"}
-          />
-
+          sx={{ height: "100vh" }}>
+          <Card>
+            <CardMedia
+              alt="Remy Sharp"
+              image="https://cdn.midjourney.com/7e7a7552-20f9-41e9-a010-938650141a60/0_3.webp"
+              sx={{
+                width: 600,
+                height: 800,
+                marginLeft: 5,
+                padding: 2,
+              }}></CardMedia>
+          </Card>
           <Typography
             top={10}
             aria-setsize={500}

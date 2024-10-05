@@ -1,48 +1,50 @@
 import React from "react";
 import { Box, Grid, Typography } from "@mui/material";
 import Footer from "./Footer";
+import ScrollableComponent from "./Scrollable";
 
 const HomeContainerOne = () => {
   return (
     <>
       {" "}
-      <Grid item xs>
-        <Box
-          justifyContent="center"
-          alightItems="center"
-          sx={{ height: "100vh" }}>
+      <Grid
+        item
+        xs
+        sx={{
+          height: "100vh",
+        }}>
+        <Box justifyContent="center" alightItems="center" sx={{}}>
           <Grid container justifyContent={"center"} alignContent={"center"}>
-            <Grid item marginTop={25}>
+            <Grid item>
               {" "}
-              <Box sx={{ textTransform: "capitalize" }}>
-                <Typography variant="h1" sx={{ fontSize: 140 }}>
-                  Samuel
-                </Typography>
-              </Box>
-            </Grid>
-            <Grid item marginTop={30} marginLeft={0}>
-              {" "}
-              <Box width={460}>
-                <Typography variant="h10" sx={{ lineHeight: 1, fontSize: 15 }}>
-                  &#8208; Passionate and driven individual with a fervent
-                  commitment to promoting technology adoption among people,
-                  aiming to alleviate financial hardships and poverty.
-                  <br />
-                  <br /> &#8208; Proficient leader adept at fostering
-                  collaboration among diverse individuals for assignments
-                  nevertheless I am an active team contributor, open to idea
-                  exchange for creating software solutions to practical
-                  problems.
-                  <br />
-                  <br />
-                  &#8208;Enthusiastic about data science analytics and software
-                  engineering, and looking forward to pursuing a major in these
-                  fields.
-                </Typography>
-              </Box>
+              <Typography
+                variant="h1"
+                marginTop={5}
+                sx={{
+                  fontSize: 70,
+                  fontWeight: 700,
+                  paddingLeft: 5.5,
+                  paddingTop: 2,
+
+                  textAlign: "left",
+                }}>
+                Samuel
+              </Typography>
+              <Typography
+                variant="h4"
+                fontWeight={500}
+                sx={{
+                  paddingLeft: 6,
+                  paddingBottom: 2,
+                  textAlign: "left",
+                  fontSize: 17,
+                }}>
+                Jnr. Software Developer
+              </Typography>
+              <ScrollableComponent />
+              <Footer />
             </Grid>
           </Grid>
-          <Footer />
         </Box>
       </Grid>
     </>

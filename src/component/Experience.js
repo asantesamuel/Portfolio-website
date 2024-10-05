@@ -1,14 +1,13 @@
 import * as React from "react";
-import Paper, { Stack } from "@mui/material";
-import Card from "@mui/material/Card";
-import { CardActionArea } from "@mui/material";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
 import CssBaseline from "@mui/material/CssBaseline";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
+import Paper from "@mui/material/Paper";
+import { useState, useEffect } from "react";
+import Card from "@mui/material/Card";
+import CardMedia from "@mui/material/CardMedia";
+import TextField from "@mui/material/TextField";
+
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 // const cards = [1, 2, 3, 4];
@@ -16,249 +15,88 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 const defaultTheme = createTheme();
 
 export default function Album() {
+  let original_data = [
+    {
+      title: "Cat",
+      image:
+        "https://cdn.midjourney.com/bfb05879-0ac1-4eff-981e-8ccfa55312e6/0_3.webp",
+    },
+    {
+      title: "Dog",
+      image:
+        "https://cdn.midjourney.com/515f96f6-ed27-436c-a125-f6894976907a/0_3.webp",
+    },
+    {
+      title: "Spiderman",
+      image:
+        "https://cdn.midjourney.com/6f195c51-d78a-4252-969f-50176b8a10e5/0_2.webp",
+    },
+    {
+      title: "Incredible Hulk",
+      image:
+        "https://cdn.midjourney.com/7e7a7552-20f9-41e9-a010-938650141a60/0_3.webp",
+    },
+    {
+      title: "Zombie",
+      image:
+        "https://cdn.midjourney.com/2c6fdcbf-7833-4bd3-9a50-ddac5febf4bc/0_1.webp",
+    },
+    {
+      title: "Tarzan",
+      image:
+        "https://cdn.midjourney.com/87fda811-61ca-463b-a115-26dd9def36ad/0_3.webp",
+    },
+  ];
+
+  const [data, setData] = useState(original_data);
+  const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    let data_rev = original_data.filter((item) =>
+      item.title.toLowerCase().includes(search.toLowerCase())
+    );
+
+    setData(data_rev);
+  }, [search]);
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <CssBaseline />
       <main>
-        {/* <Box
-          position={"relative"}
-          sx={{
-            bgcolor: "background.paper",
-            pt: 8,
-            pb: 6,
-          }}>
-          <Container maxWidth="sm" position={"fixed"}>
-            <Typography
-              component="h1"
-              variant="h2"
-              align="center"
-              color="text.primary"
-              gutterBottom>
-              My Experience
-            </Typography>
-            <Typography
-              variant="h5"
-              align="center"
-              color="text.secondary"
-              paragraph>
-              It isn&apos;t much but these are my experience so far in the tech
-              and media field
-            </Typography>
-          </Container>
-        </Box> */}
-        <Grid
-          container
-          sx={{ paddingTop: 20 }}
-          height={"100vh"}
-          p={3}
-          marginBottom={1000}
-          position={"relative"}
-          spacing={2}>
-          <Grid item bgcolor="success.primary" xs={8}>
-            <Grid container spacing={10}>
-              <Grid item>
-                {" "}
-                <Card sx={{ maxWidth: 345 }}>
-                  <CardActionArea>
-                    <CardMedia
-                      component="img"
-                      height="140"
-                      image="https://source.unsplash.com/random?wallpapers"
-                      alt="green iguana"
-                    />
-                    <CardContent>
-                      <Typography gutterBottom variant="h5" component="div">
-                        Lizard
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Lizards are a widespread group of squamate reptiles,
-                        with over 6,000 species, ranging across all continents
-                        except Antarctica
-                      </Typography>
-                    </CardContent>
-                  </CardActionArea>
-                </Card>
+        <Grid container spacing={2} marginTop={4}>
+          <Grid item xs={6}>
+            <div style={{ textAlign: "center", margin: "2%" }}>
+              <Grid container spacing={2}>
+                {data.map((item) => {
+                  return (
+                    <Grid item xs={12} sm={6} md={4} lg={4}>
+                      <Card>
+                        <CardMedia
+                          sx={{
+                            height: { lg: 360, md: 500, sm: 700, xs: 360 },
+                          }}
+                          image={item.image}></CardMedia>
+                      </Card>
+                      <h4>{item.title}</h4>
+                    </Grid>
+                  );
+                })}
               </Grid>
-              <Grid item>
-                {" "}
-                <Card sx={{ maxWidth: 345 }}>
-                  <CardActionArea>
-                    <CardMedia
-                      component="img"
-                      height="140"
-                      image="https://source.unsplash.com/random?wallpapers"
-                      alt="green iguana"
-                    />
-                    <CardContent>
-                      <Typography gutterBottom variant="h5" component="div">
-                        Lizard
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Lizards are a widespread group of squamate reptiles,
-                        with over 6,000 species, ranging across all continents
-                        except Antarctica
-                      </Typography>
-                    </CardContent>
-                  </CardActionArea>
-                </Card>
-              </Grid>
-              <Grid item>
-                {" "}
-                <Card sx={{ maxWidth: 345 }}>
-                  <CardActionArea>
-                    <CardMedia
-                      component="img"
-                      height="140"
-                      image="https://source.unsplash.com/random?wallpapers"
-                      alt="green iguana"
-                    />
-                    <CardContent>
-                      <Typography gutterBottom variant="h5" component="div">
-                        Lizard
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Lizards are a widespread group of squamate reptiles,
-                        with over 6,000 species, ranging across all continents
-                        except Antarctica
-                      </Typography>
-                    </CardContent>
-                  </CardActionArea>
-                </Card>
-              </Grid>
-              <Grid item>
-                {" "}
-                <Card sx={{ maxWidth: 345 }}>
-                  <CardActionArea>
-                    <CardMedia
-                      component="img"
-                      height="140"
-                      image="https://source.unsplash.com/random?wallpapers"
-                      alt="green iguana"
-                    />
-                    <CardContent>
-                      <Typography gutterBottom variant="h5" component="div">
-                        Lizard
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Lizards are a widespread group of squamate reptiles,
-                        with over 6,000 species, ranging across all continents
-                        except Antarctica
-                      </Typography>
-                    </CardContent>
-                  </CardActionArea>
-                </Card>
-              </Grid>
-              <Grid item>
-                {" "}
-                <Card sx={{ maxWidth: 345 }}>
-                  <CardActionArea>
-                    <CardMedia
-                      component="img"
-                      height="140"
-                      image="https://source.unsplash.com/random?wallpapers"
-                      alt="green iguana"
-                    />
-                    <CardContent>
-                      <Typography gutterBottom variant="h5" component="div">
-                        Lizard
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Lizards are a widespread group of squamate reptiles,
-                        with over 6,000 species, ranging across all continents
-                        except Antarctica
-                      </Typography>
-                    </CardContent>
-                  </CardActionArea>
-                </Card>
-              </Grid>
-              <Grid item>
-                {" "}
-                <Card sx={{ maxWidth: 345 }}>
-                  <CardActionArea>
-                    <CardMedia
-                      component="img"
-                      height="140"
-                      image="https://source.unsplash.com/random?wallpapers"
-                      alt="green iguana"
-                    />
-                    <CardContent>
-                      <Typography gutterBottom variant="h5" component="div">
-                        Lizard
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Lizards are a widespread group of squamate reptiles,
-                        with over 6,000 species, ranging across all continents
-                        except Antarctica
-                      </Typography>
-                    </CardContent>
-                  </CardActionArea>
-                </Card>
-              </Grid>
-            </Grid>
+            </div>
           </Grid>
-          <Grid
-            // bgcolor="primary.light"
-            position={"fixed"}
-            item
-            xs={4}
-            height={900}
-            marginLeft={155}
-            marginBottom={10}
-            width={750}>
-            <Stack spacing={3}>
-              {" "}
-              <Box>
-                <Typography variant="h4" component="h4">
-                  Experience
-                </Typography>
-              </Box>
-              <Box>
-                <Typography variant="h6" component="h6">
-                  Website Development
-                </Typography>
-                <Typography>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                  laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-                  irure dolor in reprehenderit in voluptate velit esse cillum
-                  dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-                  cupidatat non proident, sunt in culpa qui officia deserunt
-                  mollit anim id est laborum
-                </Typography>
-              </Box>
-              <Box>
-                <Typography variant="h6" component="h6">
-                  Photography
-                </Typography>
-                <Typography>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                  laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-                  irure dolor in reprehenderit in voluptate velit esse cillum
-                  dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-                  cupidatat non proident, sunt in culpa qui officia deserunt
-                  mollit anim id est laborum
-                </Typography>
-              </Box>
-              <Box>
-                <Typography variant="h6" component="h6">
-                  Graphic Designer
-                </Typography>
-                <Typography>
-                  {" "}
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                  laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-                  irure dolor in reprehenderit in voluptate velit esse cillum
-                  dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-                  cupidatat non proident, sunt in culpa qui officia deserunt
-                  mollit anim id est laborum
-                </Typography>
-              </Box>
-            </Stack>
+
+          <Grid item xs={6} marginTop={3}>
+            <Box
+              sx={{
+                display: "flex",
+                flexWrap: "wrap",
+                "& > :not(style)": {
+                  width: 850,
+                  height: 900,
+                },
+              }}>
+              <Paper elevation={3} />
+            </Box>
           </Grid>
         </Grid>
       </main>

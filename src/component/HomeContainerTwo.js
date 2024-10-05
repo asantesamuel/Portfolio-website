@@ -1,22 +1,18 @@
 import React from "react";
-import { Box, Grid, Avatar } from "@mui/material";
+import { Box, Grid, Card, CardMedia } from "@mui/material";
+
 const HomeContainerTwo = () => {
   return (
     <>
       {" "}
-      <Grid item xs>
+      <Grid item xs sx={{ height: "100vh" }}>
         <Box>
-          <Avatar
-            variant="square"
-            alt="pic-profile"
-            src="https://source.unsplash.com/random?wallpapers"
-            position={"fixed"}
-            sx={{
-              height: "100vh",
-              width: 700,
-              color: "success.light",
-            }}
-          />
+          <Card>
+            <CardMedia
+              alt="Hulk "
+              image="https://cdn.midjourney.com/7e7a7552-20f9-41e9-a010-938650141a60/0_3.webp"
+              sx={{ height: 1000 }}></CardMedia>
+          </Card>
         </Box>
       </Grid>
     </>

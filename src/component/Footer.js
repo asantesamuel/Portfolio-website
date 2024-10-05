@@ -16,7 +16,9 @@ const Footer = () => {
       <Box
         sx={{
           // bgcolor: "background.paper",
-          padding: 10,
+          paddingLeft: 10,
+          paddingRight: 10,
+
           // position: "fixed",
           display: "flex",
         }}

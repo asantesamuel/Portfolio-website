@@ -4,14 +4,11 @@ const HomeContainerThree = () => {
   return (
     <>
       {" "}
-      <Grid item xs>
+      <Grid item xs sx={{ height: "100vh" }}>
         <Grid container justifyContent={"center"} alignContent={"center"}>
           <Grid Item marginTop={60} marginLeft={10}>
             <Typography variant="h1">Frontend Developer</Typography>
-            <Button
-              sx={{ marginLeft: 40, marginTop: 10 }}
-              variant="contained"
-              color="success">
+            <Button sx={{ marginLeft: 40, marginTop: 10, color: "gray" }}>
               About Me
             </Button>
           </Grid>
