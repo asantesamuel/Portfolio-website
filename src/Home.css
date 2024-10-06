@@ -1,0 +1,7 @@
+.nameHeader {
+  background-color: rgb(246, 0, 0);
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 0;
+  background-color: #333;
+}

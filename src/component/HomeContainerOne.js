@@ -7,12 +7,7 @@ const HomeContainerOne = () => {
   return (
     <>
       {" "}
-      <Grid
-        item
-        xs
-        sx={{
-          height: "100vh",
-        }}>
+      <Grid item xs sx={{}}>
         <Box justifyContent="center" alightItems="center" sx={{}}>
           <Grid container justifyContent={"center"} alignContent={"center"}>
             <Grid item>

@@ -5,6 +5,7 @@ import "../App.css";
 import HomeContainerOne from "./HomeContainerOne";
 import HomeContainerTwo from "./HomeContainerTwo";
 import HomeContainerThree from "./HomeContainerThree";
+import WelcomePage from "./WelcomePage";
 
 const Home = () => {
   return (
@@ -23,8 +24,8 @@ const Home = () => {
           justifyContent="center"
           sx={{
             display: "flex",
-            marginTop: 10,
           }}>
+          <WelcomePage />
           <HomeContainerOne sx={{ flex: 1 }} />
 
           <HomeContainerTwo sx={{ flex: 1 }} />

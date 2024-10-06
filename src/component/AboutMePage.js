@@ -10,16 +10,14 @@ const AboutMePage = () => {
           position={"relative"}
           justifyContent={"left"}
           alignItems={"center"}
-          sx={{ height: "100vh" }}>
+          sx={{ padding: 5 }}>
           <Card>
             <CardMedia
               alt="Remy Sharp"
               image="https://cdn.midjourney.com/7e7a7552-20f9-41e9-a010-938650141a60/0_3.webp"
               sx={{
                 width: 600,
-                height: 800,
-                marginLeft: 5,
-                padding: 2,
+                height: 900,
               }}></CardMedia>
           </Card>
           <Typography
@@ -37,12 +35,7 @@ const AboutMePage = () => {
             Samuel Asante Boakye
             <br />
             FRONTEND DEVELOPER
-            <Stack direction={"row"} display={"block"}>
-              {" "}
-              {/* <LinkedInIcon fontSize="50" />
-              <GitHubIcon fontSize="50" />
-              <TwitterIcon fontSize="50" /> */}
-            </Stack>
+            <Stack direction={"row"} display={"block"}></Stack>
             <Stack direction={"row"} spacing={4}>
               <Box
                 align="left"
@@ -66,7 +59,6 @@ const AboutMePage = () => {
                   fontSize: 30,
                 }}>
                 Education
-                {/* <SchoolIcon /> */}
                 <Typography>
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras
                   nec suscipit orci. Ut sed suscipit felis. Pellentesque gravida
