@@ -1,5 +1,6 @@
 (() => {
   const root = document.documentElement;
+  root.classList.add("js");
   let theme = "light";
   try {
     const savedTheme = localStorage.getItem("samuel-portfolio-theme");

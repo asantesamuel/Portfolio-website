@@ -8,6 +8,7 @@
 
   const range = document.querySelector("#assembly-range");
   const motionButton = document.querySelector("#motion-toggle");
+  const resetButton = document.querySelector("#view-reset");
   const value = document.querySelector("#assembly-value");
   let context;
   try {
@@ -24,6 +25,7 @@
     canvas.after(fallback);
     if (range) range.disabled = true;
     if (motionButton) motionButton.hidden = true;
+    if (resetButton) resetButton.hidden = true;
     return;
   }
 
@@ -40,6 +42,7 @@
   let width = 1;
   let height = 1;
   let frameId = 0;
+  let manualFrameId = 0;
   let lastFrame = 0;
   let elapsed = 0;
   let visible = true;
@@ -49,8 +52,24 @@
   let scrollSpread = 0;
   let manualSpread = clamp(Number(range?.value || 0) / 100);
   let spread = manualSpread;
-  const pointer = { x: 0, y: 0, targetX: 0, targetY: 0 };
-  let angles = { yaw: 0.56, pitch: 0.42, roll: -0.025 };
+  const defaultView = { yaw: 0.56, pitch: 0.42, roll: -0.025 };
+  let angles = { ...defaultView };
+  let orbit = { ...defaultView };
+  let ambientAnchor = { yaw: 0, pitch: 0, roll: 0 };
+  let drag = null;
+  const wrapAngle = (angle) => Math.atan2(Math.sin(angle), Math.cos(angle));
+  const ambientAt = (time) => ({
+    yaw: Math.sin(time * 0.19) * 0.22,
+    pitch: Math.sin(time * 0.13) * 0.055,
+    roll: Math.sin(time * 0.14) * 0.018,
+  });
+
+  // Ambient motion stays relative to the chosen orientation, so releasing a drag,
+  // resuming playback, or changing motion preferences never resets the user's view.
+  function anchorView() {
+    orbit = { ...angles };
+    ambientAnchor = ambientAt(elapsed);
+  }
 
   /* Twenty edge/corner modules make a porous cubic assembly; the orange core is visible
      through its six open faces. The mesh is beveled geometry, rather than drawn outlines. */
@@ -151,7 +170,8 @@
   function draw() {
     context.clearRect(0, 0, width, height);
     const size = Math.min(width, height);
-    const scale = size * 0.198 / (1 + spread * 0.54);
+    // Reserve the sculpture's full bounding sphere: every yaw/pitch remains in frame.
+    const scale = size * 0.174 / (1 + spread * 0.54);
     const cx = width / 2;
     const cy = height * 0.455;
 
@@ -207,7 +227,7 @@
     root.dataset.sceneState = "ready";
   }
 
-  const canAnimate = () => visible && !document.hidden && !paused && !reduced;
+  const canAnimate = () => visible && !document.hidden && !paused && !reduced && !drag;
   function stop() {
     if (frameId) cancelAnimationFrame(frameId);
     frameId = 0;
@@ -220,13 +240,12 @@
     if (!lastFrame || time - lastFrame >= 1000 / 30) {
       elapsed += lastFrame ? Math.min((time - lastFrame) / 1000, 0.08) : 0;
       lastFrame = time;
-      pointer.x += (pointer.targetX - pointer.x) * 0.09;
-      pointer.y += (pointer.targetY - pointer.y) * 0.09;
       spread += (clamp(manualSpread + scrollSpread) - spread) * 0.095;
+      const ambient = ambientAt(elapsed);
       angles = {
-        yaw: 0.56 + Math.sin(elapsed * 0.19) * 0.22 + pointer.x * 0.11,
-        pitch: 0.42 + Math.sin(elapsed * 0.13) * 0.055 + pointer.y * 0.065,
-        roll: -0.025 + Math.sin(elapsed * 0.14) * 0.018,
+        yaw: orbit.yaw + ambient.yaw - ambientAnchor.yaw,
+        pitch: orbit.pitch + ambient.pitch - ambientAnchor.pitch,
+        roll: orbit.roll + ambient.roll - ambientAnchor.roll,
       };
       draw();
     }
@@ -237,6 +256,7 @@
   }
   function syncMotion() {
     stop();
+    anchorView();
     if (motionButton) {
       motionButton.disabled = reduced;
       motionButton.setAttribute("aria-pressed", String(paused || reduced));
@@ -244,10 +264,43 @@
       motionButton.textContent = reduced ? "Motion off" : paused ? "Play motion" : "Pause motion";
     }
     if (reduced) {
-      angles = { yaw: 0.56, pitch: 0.42, roll: -0.025 };
       spread = manualSpread;
     }
     draw();
+    start();
+  }
+
+  // Input-driven redraws are coalesced to the display refresh rate, including while
+  // paused or in reduced-motion mode. There is no inertia after the user lets go.
+  function requestManualDraw() {
+    if (!manualFrameId) {
+      manualFrameId = requestAnimationFrame(() => {
+        manualFrameId = 0;
+        draw();
+      });
+    }
+  }
+
+  function finishDrag(event) {
+    if (!drag || (event && event.pointerId !== drag.id)) return;
+    const pointerId = drag.id;
+    drag = null;
+    canvas.dataset.dragging = "false";
+    anchorView();
+    if (canvas.hasPointerCapture(pointerId)) canvas.releasePointerCapture(pointerId);
+    requestManualDraw();
+    start();
+  }
+
+  function resetView() {
+    stop();
+    if (drag) finishDrag();
+    // finishDrag may schedule ambient motion; reset its clock before it executes.
+    stop();
+    elapsed = 0;
+    angles = { ...defaultView };
+    anchorView();
+    requestManualDraw();
     start();
   }
 
@@ -275,21 +328,67 @@
     paused = !paused;
     syncMotion();
   });
-  root.addEventListener("pointermove", (event) => {
-    if (!canAnimate() || event.pointerType === "touch") return;
-    const bounds = root.getBoundingClientRect();
-    pointer.targetX = clamp((event.clientX - bounds.left) / bounds.width, 0, 1) * 2 - 1;
-    pointer.targetY = clamp((event.clientY - bounds.top) / bounds.height, 0, 1) * 2 - 1;
-  }, { passive: true });
-  root.addEventListener("pointerleave", () => {
-    pointer.targetX = 0;
-    pointer.targetY = 0;
+  // Capture only gestures beginning on the canvas. Range controls and page scrolling
+  // outside the canvas retain their native behavior; a second touch is ignored.
+  canvas.addEventListener("pointerdown", (event) => {
+    if (drag || !event.isPrimary || (event.pointerType === "mouse" && event.button !== 0)) return;
+    event.preventDefault();
+    stop();
+    anchorView();
+    drag = { id: event.pointerId, x: event.clientX, y: event.clientY };
+    canvas.dataset.dragging = "true";
+    canvas.focus({ preventScroll: true });
+    canvas.setPointerCapture(event.pointerId);
   });
+  canvas.addEventListener("pointermove", (event) => {
+    if (!drag || drag.id !== event.pointerId) return;
+    event.preventDefault();
+    const sensitivity = Math.PI * 2 / Math.max(240, Math.min(width, height));
+    angles.yaw = wrapAngle(angles.yaw + (event.clientX - drag.x) * sensitivity);
+    angles.pitch = wrapAngle(angles.pitch + (event.clientY - drag.y) * sensitivity);
+    drag.x = event.clientX;
+    drag.y = event.clientY;
+    requestManualDraw();
+  });
+  canvas.addEventListener("pointerup", finishDrag);
+  canvas.addEventListener("pointercancel", finishDrag);
+  canvas.addEventListener("lostpointercapture", finishDrag);
+  canvas.addEventListener("keydown", (event) => {
+    if (event.altKey || event.ctrlKey || event.metaKey) return;
+    if (event.key === "Home") {
+      event.preventDefault();
+      resetView();
+      return;
+    }
+    const direction = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[event.key];
+    if (!direction) return;
+    event.preventDefault();
+    stop();
+    if (drag) finishDrag();
+    stop();
+    const step = Math.PI / (event.shiftKey ? 36 : 12);
+    angles.yaw = wrapAngle(angles.yaw + direction[0] * step);
+    angles.pitch = wrapAngle(angles.pitch + direction[1] * step);
+    anchorView();
+    requestManualDraw();
+    start();
+  });
+  resetButton?.addEventListener("click", resetView);
   window.addEventListener("scroll", () => {
     if (!canAnimate()) return;
     scrollSpread = clamp(-root.getBoundingClientRect().top / Math.max(1, window.innerHeight)) * 0.22;
   }, { passive: true });
-  document.addEventListener("visibilitychange", () => document.hidden ? stop() : start());
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      if (drag) finishDrag();
+      stop();
+      if (manualFrameId) cancelAnimationFrame(manualFrameId);
+      manualFrameId = 0;
+    } else {
+      draw();
+      start();
+    }
+  });
   const preferenceChanged = (event) => {
     reduced = event.matches;
     syncMotion();

@@ -14,11 +14,13 @@ There is no build step, package installation, or framework dependency.
 
 The current **Assembly** redesign uses Cold Steel (`#F8F7F3`), graphite, and warm orange accents. Oversized typography, open content grids, offset project artwork, and quiet dividers give the nine pages a shared visual identity. The dark theme uses graphite surfaces with Cold Steel text.
 
-The original homepage sculpture assembles twenty metal modules around an orange core: an abstract expression of parts becoming a system. Visitors can separate the modules using a keyboard-accessible slider, pause movement, or explore the subtle pointer response. It uses native Canvas 2D projection with no 3D library, video, model download, or third-party requests. Automatic animation stops when paused, offscreen, hidden, or reduced motion is requested. Rendering is capped at 30 frames per second and a device-pixel ratio of 2.
+The original homepage sculpture assembles twenty metal modules around an orange core: an abstract expression of parts becoming a system. Visitors can drag the sculpture through a full 360° view with a mouse, finger, or pen; use arrow keys to rotate it; reset the view; separate the modules with a slider; and pause automatic movement. Manual rotation remains available when paused or reduced motion is enabled. Touch gestures beginning outside the canvas continue to scroll the page normally. It uses native Canvas 2D projection with no 3D library, video, model download, or third-party requests. Automatic animation stops when paused, offscreen, hidden, or reduced motion is requested. Rendering is capped at 30 frames per second and a device-pixel ratio of 2.
 
 Project artwork is original SVG concept illustration, explicitly labelled as such. It is not a product screenshot or evidence of implemented features. Replace it with verified product imagery when available. The system font stack avoids font downloads.
 
-The latest redesign request supersedes the earlier green palette and the reference prompt's single-file/video architecture. The reference informed the sculptural focal point and interaction; the portfolio retains its separate pages, styles, and scripts. No employment, contact, project capability, or performance claims were added by the redesign.
+The November 15 follow-up replaces platform-dependent arrow characters with inline SVG icons, adds the grayscale About portrait and floating navigation, and updates NovaYield to **backend and frontend implemented**, as confirmed by the owner. No deployment or performance claims were added. Research and portrait production notes are in [DESIGN-NOTES.md](DESIGN-NOTES.md).
+
+The latest redesign request supersedes the earlier green palette and the reference prompt's single-file/video architecture. The reference informed the sculptural focal point and interaction; the portfolio retains its separate pages, styles, and scripts. The visual redesign preserves the existing professional content; the NovaYield implementation status was subsequently updated at the owner’s request.
 
 ## Run locally
 
@@ -44,11 +46,13 @@ Then open <http://127.0.0.1:8000/>. Stop the server with Ctrl+C. The site can al
 ├── contact.html               Contact information
 ├── projects/                  Individual project detail pages
 ├── css/styles.css             Shared design tokens and responsive styles
-├── js/site.js                 Theme, mobile menu, and year behavior
+├── js/site.js                 Theme control and current year
+├── js/navigation.js           Floating dock, idle/reveal and mobile menu
+├── js/portrait.js             Reduced-motion-aware portrait interaction
 ├── js/theme-init.js           Applies saved/system theme before rendering
 ├── js/builder-scene.js        Original interactive assembly sculpture
 ├── assets/icons/favicon.svg   Portfolio favicon
-├── assets/images/            Four SVG project concept illustrations
+├── assets/images/            Project SVGs and grayscale portrait
 └── assets/documents/          Downloadable résumé
 ```
 
@@ -77,7 +81,7 @@ The primary contact details are in `contact.html`; GitHub and LinkedIn also appe
 
 ### Replace the résumé or other assets
 
-Replace `assets/documents/Samuel-Boakye-Asante-Resume.pdf` with the new PDF and retain that filename, or update the résumé links in every page. Replace `assets/icons/favicon.svg` to change the icon. Keep image dimensions specified in HTML when adding images; lazy-load below-the-fold imagery.
+Replace `assets/documents/Samuel-Boakye-Asante-Resume.pdf` with the new PDF and retain that filename, or update the résumé links in every page. Replace `assets/icons/favicon.svg` to change the icon. The About portrait is `assets/images/samuel-asante-grayscale.jpg`; its subtle tilt is in `js/portrait.js` and its crop/frame in `.portrait` CSS rules. The supplied source photo was left untouched. Keep image dimensions specified in HTML when adding images; lazy-load below-the-fold imagery.
 
 ### Change theme colors and typography
 
@@ -85,7 +89,7 @@ Edit the custom properties at the top of `css/styles.css`. `:root` contains ligh
 
 ### Update shared navigation and footer
 
-These are static HTML on all nine pages, so update every page together. The primary navigation is Home, About, Experience, Projects, and Contact. Skills, education, and leadership remain within About. Detail pages use `../` paths and highlight Projects. Keep the 960px CSS menu breakpoint aligned with the 961px JavaScript desktop query.
+These are static HTML on all nine pages, so update every page together. The primary navigation is Home, About, Experience, Projects, and Contact. Skills, education, and leadership remain within About. Detail pages use `../` paths and highlight Projects. Keep the 960px CSS menu breakpoint aligned with the 961px desktop query in `js/navigation.js`. The dock rests after 3.5 seconds of inactivity (or after scrolling down), leaving a visible Menu tab. Pointer approach, touch, keyboard use, or scrolling upward restores it. Open menus and any focus inside the dock keep it visible. Use `scheduleRest()` to adjust the timeout.
 
 ### Prepare for deployment
 
